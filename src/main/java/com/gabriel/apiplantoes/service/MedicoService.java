@@ -1,8 +1,6 @@
 package com.gabriel.apiplantoes.service;
 
-import com.gabriel.apiplantoes.model.DadosDeAlteracaoStatusMedico;
-import com.gabriel.apiplantoes.model.DadosDeCadastroMedico;
-import com.gabriel.apiplantoes.model.MedicoModel;
+import com.gabriel.apiplantoes.model.*;
 import com.gabriel.apiplantoes.repository.MedicoRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,18 +15,23 @@ public class MedicoService {
         this.repository = repository;
     }
 
-    public MedicoModel cadastrarMedico(DadosDeCadastroMedico dados) {
+    public void cadastrarMedico(CadastroMedico dados) {
         MedicoModel medico = new MedicoModel(dados);
-        return repository.save(medico);
+        repository.save(medico);
     }
 
-    public void atualizarStatusMedico(DadosDeAlteracaoStatusMedico dados) {
+    public void atualizarStatusMedico(AlteracaoStatusMedico dados) {
         MedicoModel medico = repository.getReferenceById(dados.id());
         medico.atualizarStatusMedico(dados);
     }
 
-    public List<MedicoModel> listagemDeMedicos() {
-        return repository.findAll();
+    public List<ListagemMedicos> listagemDeMedicos() {
+        var listagem = repository.findAll().stream().map(ListagemMedicos::new);
+        return listagem.toList();
     }
 
+    public void atualizarUnidadeMedico(AlteracaoUnidadeAssistencial dados) {
+        MedicoModel novaUnidade = repository.getReferenceById(dados.id());
+        novaUnidade.atualizarUnidadeAssistencial(dados);
+    }
 }

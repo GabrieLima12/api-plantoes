@@ -1,8 +1,6 @@
 package com.gabriel.apiplantoes.controller;
 
-import com.gabriel.apiplantoes.model.DadosDeAlteracaoStatusMedico;
-import com.gabriel.apiplantoes.model.DadosDeCadastroMedico;
-import com.gabriel.apiplantoes.model.MedicoModel;
+import com.gabriel.apiplantoes.model.*;
 import com.gabriel.apiplantoes.service.MedicoService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -22,22 +20,30 @@ public class MedicoController {
         this.service = service;
     }
 
-    @GetMapping
-    public ResponseEntity<List<MedicoModel>> listar() {
-        List<MedicoModel> lista = service.listagemDeMedicos();
+    @GetMapping("/listagem")
+    public ResponseEntity<List<ListagemMedicos>> listar() {
+        List<ListagemMedicos> lista = service.listagemDeMedicos();
         return ResponseEntity.ok(lista);
     }
 
-    @PostMapping
-    public ResponseEntity<MedicoModel> cadastro(@RequestBody @Valid DadosDeCadastroMedico dados) {
-        MedicoModel novoMedico = service.cadastrarMedico(dados);
-        return new ResponseEntity<>(novoMedico, HttpStatus.CREATED);
+    @PostMapping("/cadastro")
+    @Transactional
+    public ResponseEntity<CadastroMedico> cadastro(@RequestBody @Valid CadastroMedico dados) {
+        service.cadastrarMedico(dados);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PutMapping
+    @PutMapping("/status")
     @Transactional
-    public ResponseEntity<DadosDeAlteracaoStatusMedico> alterarStatusMedico(@RequestBody @Valid DadosDeAlteracaoStatusMedico dados) {
+    public ResponseEntity<AlteracaoStatusMedico> alterarStatusMedico(@RequestBody @Valid AlteracaoStatusMedico dados) {
         service.atualizarStatusMedico(dados);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/unidade")
+    @Transactional
+    public ResponseEntity<AlteracaoUnidadeAssistencial> alterarUnidadeMedico(@RequestBody @Valid AlteracaoUnidadeAssistencial dados) {
+        service.atualizarUnidadeMedico(dados);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
