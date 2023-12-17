@@ -20,10 +20,13 @@ public class MedicoModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+
     @Column(name = "nome_medico")
     private String nomeMedico;
+
     @Column(name = "crm")
     private String crm;
+
     @Column(name = "data_cadastro")
     private LocalDate data;
 
@@ -38,7 +41,7 @@ public class MedicoModel {
     @Column(name = "nome_unidade")
     private String nomeUnidadeAssistencial;
 
-    public MedicoModel(DadosDeCadastroMedico dados) {
+    public MedicoModel(CadastroMedico dados) {
         this.nomeMedico = dados.nomeMedico();
         this.crm = dados.crm();
         this.data = LocalDate.now();
@@ -47,13 +50,13 @@ public class MedicoModel {
         this.nomeUnidadeAssistencial = dados.nomeUnidadeAssistencial();
     }
 
-    public void atualizarUnidadeAssistencial(DadosDeAlteracaoUnidadeAssistencial dados) {
+    public void atualizarUnidadeAssistencial(AlteracaoUnidadeAssistencial dados) {
         if (dados.nomeUnidadeAssistencial() != null) {
             this.nomeUnidadeAssistencial = dados.nomeUnidadeAssistencial();
         }
     }
 
-    public void atualizarStatusMedico(DadosDeAlteracaoStatusMedico dados) {
+    public void atualizarStatusMedico(AlteracaoStatusMedico dados) {
         if (dados.status() == Status.ATIVO) {
             this.status = Status.ATIVO;
         }
