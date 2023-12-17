@@ -6,23 +6,29 @@ import com.gabriel.apiplantoes.model.MedicoModel;
 import com.gabriel.apiplantoes.repository.MedicoRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class MedicoService {
 
-    private MedicoRepository repository;
+    private final MedicoRepository repository;
 
     public MedicoService(MedicoRepository repository) {
         this.repository = repository;
     }
 
-    public void cadastrarMedico(DadosDeCadastroMedico dados) {
+    public MedicoModel cadastrarMedico(DadosDeCadastroMedico dados) {
         MedicoModel medico = new MedicoModel(dados);
-        repository.save(medico);
+        return repository.save(medico);
     }
 
     public void atualizarStatusMedico(DadosDeAlteracaoStatusMedico dados) {
         MedicoModel medico = repository.getReferenceById(dados.id());
         medico.atualizarStatusMedico(dados);
+    }
+
+    public List<MedicoModel> listagemDeMedicos() {
+        return repository.findAll();
     }
 
 }
