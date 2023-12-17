@@ -2,9 +2,9 @@ package com.gabriel.apiplantoes.model;
 
 import jakarta.validation.constraints.NotNull;
 
-public record DadosDeAlteracaoCadastral(
+public record DadosDeAlteracaoStatusMedico(
         @NotNull
         Long id,
-        String nomeUnidadeAssistencial
+        Status status
 ) {
 }
