@@ -27,6 +27,12 @@ public class MedicoController {
         return ResponseEntity.ok(lista);
     }
 
+    @GetMapping("/plantonista/{id}")
+    public ResponseEntity<ListagemMedicos> plantonistaPorId(@PathVariable Long id) {
+        ListagemMedicos plantonista = service.plantonistaPorId(id);
+        return ResponseEntity.ok(plantonista);
+    }
+
     @PostMapping("/cadastro")
     @Transactional
     public ResponseEntity<CadastroMedico> cadastro(@RequestBody @Valid CadastroMedico dados) {

@@ -30,8 +30,14 @@ public class MedicoService {
         return listagem.toList();
     }
 
+    public ListagemMedicos plantonistaPorId(Long id) {
+        MedicoModel plantonista = repository.getReferenceById(id);
+        return new ListagemMedicos(plantonista);
+    }
+
     public void atualizarUnidadeMedico(AlteracaoUnidadeAssistencial dados) {
         MedicoModel novaUnidade = repository.getReferenceById(dados.id());
         novaUnidade.atualizarUnidadeAssistencial(dados);
     }
+
 }
