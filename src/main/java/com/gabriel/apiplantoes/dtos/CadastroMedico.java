@@ -1,8 +1,12 @@
-package com.gabriel.apiplantoes.model;
+package com.gabriel.apiplantoes.dtos;
 
+import com.gabriel.apiplantoes.medico.Especialidade;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+
+import java.util.List;
 
 public record CadastroMedico(
         @NotBlank
@@ -12,6 +16,6 @@ public record CadastroMedico(
         String crm,
         @NotNull
         Especialidade especialidade,
-        @NotBlank
-        String nomeUnidadeAssistencial) {
+        @NotEmpty
+        List<Long> idsUnidades) {
 }

@@ -1,4 +1,4 @@
-package com.gabriel.apiplantoes.model;
+package com.gabriel.apiplantoes.dtos;
 
 import jakarta.validation.constraints.NotNull;
 
