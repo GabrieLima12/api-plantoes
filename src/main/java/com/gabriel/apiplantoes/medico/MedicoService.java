@@ -1,6 +1,8 @@
 package com.gabriel.apiplantoes.medico;
 
 import com.gabriel.apiplantoes.dtos.*;
+import com.gabriel.apiplantoes.exception.MedicoException;
+import com.gabriel.apiplantoes.exception.UnidadeException;
 import com.gabriel.apiplantoes.medicounidade.MedicoUnidade;
 import com.gabriel.apiplantoes.medicounidade.MedicoUnidadeRepository;
 import com.gabriel.apiplantoes.unidade.Unidade;
@@ -10,7 +12,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class MedicoService {
@@ -33,11 +34,11 @@ public class MedicoService {
         medico.setDataCadastro(LocalDate.now());
         medico.setStatus(Status.ATIVO);
 
-        medico = medicoRepository.save(medico);
-
         List<Unidade> unidades = dados.idsUnidades().stream()
-                .map(unidadeId -> unidadeRepository.findById(unidadeId).orElse(null))
+                .map(unidadeId -> unidadeRepository.findById(unidadeId).orElseThrow(UnidadeException::new))
                 .toList();
+
+        medico = medicoRepository.save(medico);
 
         for (Unidade unidade : unidades) {
             MedicoUnidade medicoUnidade = new MedicoUnidade();
@@ -50,22 +51,17 @@ public class MedicoService {
     }
 
     public ListagemMedico listarMedicoPorId(Long id) {
-        Optional<Medico> medicoOptional = medicoRepository.findById(id);
+        Medico medico = medicoRepository.findById(id).orElseThrow(MedicoException::new);
         List<Long> idsUnidades = medicoUnidadeRepository.findAllUnitsByMedicoId(id);
 
-        if (medicoOptional.isPresent()) {
-            Medico medico = medicoOptional.get();
-            return new ListagemMedico(
-                    medico.getId(),
-                    medico.getNomeMedico(),
-                    medico.getCrm(),
-                    medico.getEspecialidade(),
-                    medico.getStatus(),
-                    idsUnidades
-            );
-        }
-
-        return null;
+        return new ListagemMedico(
+                medico.getId(),
+                medico.getNomeMedico(),
+                medico.getCrm(),
+                medico.getEspecialidade(),
+                medico.getStatus(),
+                idsUnidades
+        );
     }
 
     public List<ListagemMedico> listarMedicos() {
