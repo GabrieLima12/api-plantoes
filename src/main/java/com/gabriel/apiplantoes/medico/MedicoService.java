@@ -2,6 +2,7 @@ package com.gabriel.apiplantoes.medico;
 
 import com.gabriel.apiplantoes.dtos.*;
 import com.gabriel.apiplantoes.exception.MedicoException;
+import com.gabriel.apiplantoes.exception.MedicoUnidadeException;
 import com.gabriel.apiplantoes.exception.UnidadeException;
 import com.gabriel.apiplantoes.medicounidade.MedicoUnidade;
 import com.gabriel.apiplantoes.medicounidade.MedicoUnidadeRepository;
@@ -38,30 +39,41 @@ public class MedicoService {
                 .map(unidadeId -> unidadeRepository.findById(unidadeId).orElseThrow(UnidadeException::new))
                 .toList();
 
-        medico = medicoRepository.save(medico);
+        try {
+            medico = medicoRepository.save(medico);
+        } catch (MedicoException exception) {
+            throw new MedicoException("Erro ao cadastrar médico!");
+        }
 
         for (Unidade unidade : unidades) {
             MedicoUnidade medicoUnidade = new MedicoUnidade();
             medicoUnidade.setUnidade(unidade);
             medicoUnidade.setMedico(medico);
 
-            medicoUnidadeRepository.save(medicoUnidade);
+            try {
+                medicoUnidadeRepository.save(medicoUnidade);
+            } catch (MedicoUnidadeException exception) {
+                throw new MedicoUnidadeException("Erro ao criar o relacionamento de médico e unidades!");
+            }
         }
 
     }
 
     public ListagemMedico listarMedicoPorId(Long id) {
         Medico medico = medicoRepository.findById(id).orElseThrow(MedicoException::new);
-        List<Long> idsUnidades = medicoUnidadeRepository.findAllUnitsByMedicoId(id);
-
-        return new ListagemMedico(
-                medico.getId(),
-                medico.getNomeMedico(),
-                medico.getCrm(),
-                medico.getEspecialidade(),
-                medico.getStatus(),
-                idsUnidades
-        );
+        try {
+            List<Long> idsUnidades = medicoUnidadeRepository.findAllUnitsByMedicoId(id);
+            return new ListagemMedico(
+                    medico.getId(),
+                    medico.getNomeMedico(),
+                    medico.getCrm(),
+                    medico.getEspecialidade(),
+                    medico.getStatus(),
+                    idsUnidades
+            );
+        } catch (MedicoUnidadeException exception) {
+            throw new MedicoUnidadeException("Erro ao buscar unidades relacionada ao médico: " + medico.getNomeMedico());
+        }
     }
 
     public List<ListagemMedico> listarMedicos() {
@@ -69,13 +81,18 @@ public class MedicoService {
         List<ListagemMedico> listagemMedicos = new ArrayList<>();
 
         for (Medico medico: medicos) {
-            List<Long> idsUnidades = medicoUnidadeRepository.findAllUnitsByMedicoId(medico.getId());
-            listagemMedicos.add(new ListagemMedico(medico.getId(),
-                    medico.getNomeMedico(),
-                    medico.getCrm(),
-                    medico.getEspecialidade(),
-                    medico.getStatus(),
-                    idsUnidades));
+            try {
+                List<Long> idsUnidades = medicoUnidadeRepository.findAllUnitsByMedicoId(medico.getId());
+
+                listagemMedicos.add(new ListagemMedico(medico.getId(),
+                        medico.getNomeMedico(),
+                        medico.getCrm(),
+                        medico.getEspecialidade(),
+                        medico.getStatus(),
+                        idsUnidades));
+            } catch (MedicoUnidadeException exception) {
+                throw new MedicoUnidadeException("Erro ao buscar unidades relacionada ao médico: " + medico.getNomeMedico());
+            }
         }
 
         return listagemMedicos;

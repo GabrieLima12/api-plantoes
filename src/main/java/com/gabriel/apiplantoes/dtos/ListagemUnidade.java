@@ -1,6 +1,6 @@
 package com.gabriel.apiplantoes.dtos;
 
-public record ListagemUnidades(
+public record ListagemUnidade(
         Long id,
         String nomeUnidade) {
 }

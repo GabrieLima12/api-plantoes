@@ -10,15 +10,45 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UnidadeException.class)
-    private ResponseEntity<RestErrorDTO> unidadeNaoEncontrada(UnidadeException exception) {
-        RestErrorDTO errorDTO = new RestErrorDTO(HttpStatus.NOT_FOUND, exception.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDTO);
+    private ResponseEntity<RestErrorDTO> unidadeExceptions(UnidadeException exception) {
+        HttpStatus status;
+
+        if (exception.getMessage().equals("Unidade não encontrada!")) {
+            status = HttpStatus.NOT_FOUND;
+        } else {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        RestErrorDTO errorDTO = new RestErrorDTO(status, exception.getMessage());
+        return ResponseEntity.status(status).body(errorDTO);
     }
 
     @ExceptionHandler(MedicoException.class)
-    private ResponseEntity<RestErrorDTO> medicoNaoEncontrado(MedicoException exception) {
-        RestErrorDTO errorDTO = new RestErrorDTO(HttpStatus.NOT_FOUND, exception.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDTO);
+    private ResponseEntity<RestErrorDTO> medicoExceptions(MedicoException exception) {
+        HttpStatus status;
+
+        if (exception.getMessage().equals("Medico não encontrado!")) {
+            status = HttpStatus.NOT_FOUND;
+        } else {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        RestErrorDTO errorDTO = new RestErrorDTO(status, exception.getMessage());
+        return ResponseEntity.status(status).body(errorDTO);
+    }
+
+    @ExceptionHandler(MedicoUnidadeException.class)
+    private ResponseEntity<RestErrorDTO> medicoUnidadeExceptions(MedicoUnidadeException exception) {
+        HttpStatus status;
+
+        if (exception.getMessage().equals("Medico ou unidade não encontrada!"))  {
+            status = HttpStatus.NOT_FOUND;
+        } else {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        RestErrorDTO errorDTO = new RestErrorDTO(status, exception.getMessage());
+        return ResponseEntity.status(status).body(errorDTO);
     }
 
 }
