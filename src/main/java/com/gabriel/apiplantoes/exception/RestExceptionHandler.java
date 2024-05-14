@@ -1,5 +1,6 @@
 package com.gabriel.apiplantoes.exception;
 
+import com.gabriel.apiplantoes.dtos.RestErrorDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -37,11 +38,25 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(status).body(errorDTO);
     }
 
-    @ExceptionHandler(MedicoUnidadeException.class)
-    private ResponseEntity<RestErrorDTO> medicoUnidadeExceptions(MedicoUnidadeException exception) {
+    @ExceptionHandler(RelacaoMedicoException.class)
+    private ResponseEntity<RestErrorDTO> medicoUnidadeExceptions(RelacaoMedicoException exception) {
         HttpStatus status;
 
         if (exception.getMessage().equals("Medico ou unidade não encontrada!"))  {
+            status = HttpStatus.NOT_FOUND;
+        } else {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        RestErrorDTO errorDTO = new RestErrorDTO(status, exception.getMessage());
+        return ResponseEntity.status(status).body(errorDTO);
+    }
+
+    @ExceptionHandler(EspecialidadeException.class)
+    private ResponseEntity<RestErrorDTO> especialidadeExceptions(EspecialidadeException exception) {
+        HttpStatus status;
+
+        if (exception.getMessage().equals("Especialidade não encontrada!"))  {
             status = HttpStatus.NOT_FOUND;
         } else {
             status = HttpStatus.INTERNAL_SERVER_ERROR;

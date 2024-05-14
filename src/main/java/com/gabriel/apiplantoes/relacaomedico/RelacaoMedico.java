@@ -1,17 +1,18 @@
-package com.gabriel.apiplantoes.medicounidade;
+package com.gabriel.apiplantoes.relacaomedico;
 
+import com.gabriel.apiplantoes.especialidade.Especialidade;
 import com.gabriel.apiplantoes.medico.Medico;
 import com.gabriel.apiplantoes.unidade.Unidade;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "medico_unidade")
+@Table(name = "relacao_medico")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class MedicoUnidade {
+public class RelacaoMedico {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,4 +26,10 @@ public class MedicoUnidade {
     @JoinColumn(name = "unidade_id")
     private Unidade unidade;
 
+    @ManyToOne
+    @JoinColumn(name = "especialidade_id")
+    private Especialidade especialidade;
+
+    @Column(name = "is_primary", nullable = false)
+    private boolean primary;
 }

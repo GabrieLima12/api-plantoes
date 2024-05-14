@@ -1,9 +1,11 @@
 package com.gabriel.apiplantoes.medico;
 
+import com.gabriel.apiplantoes.especialidade.Especialidade;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "medicos")
@@ -25,10 +27,6 @@ public class Medico {
 
     @Column(name = "data_cadastro", nullable = false)
     private LocalDate dataCadastro;
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Especialidade especialidade;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

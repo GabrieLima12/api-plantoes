@@ -1,4 +1,4 @@
-package com.gabriel.apiplantoes.exception;
+package com.gabriel.apiplantoes.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
