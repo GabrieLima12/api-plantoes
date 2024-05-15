@@ -8,7 +8,8 @@ public record ListagemMedico(
         Long id,
         String nomeMedico,
         String crm,
-        List<EspecialidadeDTO> especialidades,
+        Long idEspecialidadePrimaria,
+        Long idEspecialidadeSecundaria,
         Status status,
         List<Long> idsUnidades) {
 }

@@ -13,7 +13,6 @@ import com.gabriel.apiplantoes.unidade.Unidade;
 import com.gabriel.apiplantoes.unidade.UnidadeRepository;
 import org.springframework.stereotype.Service;
 
-import javax.management.relation.RelationException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,10 +34,19 @@ public class MedicoService {
 
     public void cadastrarMedico(CadastroMedico dados) {
         Medico medico = new Medico();
+
         medico.setNomeMedico(dados.nomeMedico());
         medico.setCrm(dados.crm());
         medico.setDataCadastro(LocalDate.now());
         medico.setStatus(Status.ATIVO);
+
+        Especialidade especialidadePrimaria = especialidadeRepository.findById(dados.idEspecialidadePrincipal()).orElseThrow(EspecialidadeException::new);
+        especialidadePrimaria.setId(dados.idEspecialidadePrincipal());
+
+        if (dados.idEspecialidadeSecundaria() != null) {
+            Especialidade especialidadeSecundaria = especialidadeRepository.findById(dados.idEspecialidadeSecundaria()).orElseThrow(EspecialidadeException::new);
+            medico.setEspecialidadeSecundaria(especialidadeSecundaria);
+        }
 
         List<Unidade> unidades = dados.idsUnidades().stream()
                 .map(unidadeId -> unidadeRepository.findById(unidadeId).orElseThrow(UnidadeException::new))
@@ -50,43 +58,45 @@ public class MedicoService {
             throw new MedicoException("Erro ao cadastrar médico!");
         }
 
-        for (EspecialidadeDTO especialidadeDTO : dados.especialidades()) {
-            Especialidade especialidade = especialidadeRepository.findById(especialidadeDTO.getId()).orElseThrow(EspecialidadeException::new);
-            for (Unidade unidade : unidades) {
-                RelacaoMedico relacaoMedico = new RelacaoMedico();
-                relacaoMedico.setMedico(medico);
-                relacaoMedico.setEspecialidade(especialidade);
-                relacaoMedico.setUnidade(unidade);
-                relacaoMedico.setPrimary(especialidadeDTO.isPrimary());
+        for (Unidade unidade : unidades) {
+            RelacaoMedico relacaoMedico = new RelacaoMedico();
+            relacaoMedico.setMedico(medico);
+            relacaoMedico.setUnidade(unidade);
 
-                try {
-                    relacaoMedicoRepository.save(relacaoMedico);
-                } catch (RelacaoMedicoException ex) {
-                    throw new RelacaoMedicoException("Erro ao relacionar medico e unidade!");
-                }
-
+            try {
+                relacaoMedicoRepository.save(relacaoMedico);
+            } catch (RelacaoMedicoException ex) {
+                throw new RelacaoMedicoException("Erro ao relacionar medico e unidade!");
             }
+
         }
+
     }
 
-//    public ListagemMedico listarMedicoPorId(Long id) {
-//        Medico medico = medicoRepository.findById(id).orElseThrow(MedicoException::new);
-//        try {
-//            List<Long> idsUnidades = relacaoMedicoRepository.findAllUnitsByMedicoId(id);
-//            List<Especialidade> especialidades = relacaoMedicoRepository.findAllSpecialtyByMedicoId(id);
-//
-//            return new ListagemMedico(
-//                    medico.getId(),
-//                    medico.getNomeMedico(),
-//                    medico.getCrm(),
-//                    especialidades,
-//                    medico.getStatus(),
-//                    idsUnidades
-//            );
-//        } catch (RelacaoMedicoException exception) {
-//            throw new RelacaoMedicoException("Erro ao buscar unidades relacionada ao médico: " + medico.getNomeMedico());
-//        }
-//    }
+    public ListagemMedico listarMedicoPorId(Long id) {
+        Medico medico = medicoRepository.findById(id).orElseThrow(MedicoException::new);
+        try {
+            List<Long> idsUnidades = relacaoMedicoRepository.findAllUnitsByMedicoId(id);
+            Especialidade especialidadePrimaria = medico.getEspecialidadePrimaria();
+            Especialidade especialidadeSecundaria = medico.getEspecialidadeSecundaria();
+
+            Long idEspecialidadePrimaria = especialidadePrimaria != null ? especialidadePrimaria.getId() : null;
+            Long idEspecialidadeSecundaria = especialidadeSecundaria != null ? especialidadeSecundaria.getId() : null;
+
+            return new ListagemMedico(
+                    medico.getId(),
+                    medico.getNomeMedico(),
+                    medico.getCrm(),
+                    idEspecialidadePrimaria,
+                    idEspecialidadeSecundaria,
+                    medico.getStatus(),
+                    idsUnidades
+            );
+
+        } catch (Exception exception) {
+            throw new RelacaoMedicoException("Erro ao buscar unidades relacionada ao médico: " + medico.getNomeMedico());
+        }
+    }
 
     public List<ListagemMedico> listarMedicos() {
         List<Medico> medicos = medicoRepository.findAll();
@@ -95,20 +105,20 @@ public class MedicoService {
         for (Medico medico: medicos) {
             try {
                 List<Long> idsUnidades = relacaoMedicoRepository.findAllUnitsByMedicoId(medico.getId());
-                List<EspecialidadeDTO> especialidadeDTO = new ArrayList<>();
-                List<RelacaoMedico> relacaoMedicos = relacaoMedicoRepository.findAllByMedicoId(medico.getId());
+                Especialidade especialidadePrimaria = medico.getEspecialidadePrimaria();
+                Especialidade especialidadeSecundaria = medico.getEspecialidadeSecundaria();
 
-                for (RelacaoMedico relacaoMedico : relacaoMedicos) {
-                    especialidadeDTO.add(EspecialidadeDTO.builder().id(relacaoMedico.getEspecialidade().getId()).primary(relacaoMedico.isPrimary()).build());
-                }
+                Long idEspecialidadePrimaria = especialidadePrimaria != null ? especialidadePrimaria.getId() : null;
+                Long idEspecialidadeSecundaria = especialidadeSecundaria != null ? especialidadeSecundaria.getId() : null;
 
                 listagemMedicos.add(new ListagemMedico(medico.getId(),
                         medico.getNomeMedico(),
                         medico.getCrm(),
-                        especialidadeDTO,
+                        idEspecialidadePrimaria,
+                        idEspecialidadeSecundaria,
                         medico.getStatus(),
                         idsUnidades));
-            } catch (RelacaoMedicoException exception) {
+            } catch (Exception exception) {
                 throw new RelacaoMedicoException("Erro ao buscar unidades relacionada ao médico: " + medico.getNomeMedico());
             }
         }

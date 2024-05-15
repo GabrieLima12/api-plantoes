@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 @Table(name = "medicos")
@@ -32,4 +31,11 @@ public class Medico {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "especialidade_primaria_id", nullable = false)
+    private Especialidade especialidadePrimaria;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "especialidade_secundaria_id")
+    private Especialidade especialidadeSecundaria;
 }

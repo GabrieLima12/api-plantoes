@@ -1,6 +1,5 @@
 package com.gabriel.apiplantoes.relacaomedico;
 
-import com.gabriel.apiplantoes.especialidade.Especialidade;
 import com.gabriel.apiplantoes.medico.Medico;
 import com.gabriel.apiplantoes.unidade.Unidade;
 import jakarta.persistence.*;
@@ -25,11 +24,4 @@ public class RelacaoMedico {
     @ManyToOne
     @JoinColumn(name = "unidade_id")
     private Unidade unidade;
-
-    @ManyToOne
-    @JoinColumn(name = "especialidade_id")
-    private Especialidade especialidade;
-
-    @Column(name = "is_primary", nullable = false)
-    private boolean primary;
 }
