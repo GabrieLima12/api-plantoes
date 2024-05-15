@@ -1,6 +1,6 @@
-package com.gabriel.apiplantoes.dtos;
+package com.gabriel.apiplantoes.domain.dtos;
 
-import com.gabriel.apiplantoes.medico.Status;
+import com.gabriel.apiplantoes.domain.medico.Status;
 import jakarta.validation.constraints.NotNull;
 
 public record AlteracaoStatusMedico(

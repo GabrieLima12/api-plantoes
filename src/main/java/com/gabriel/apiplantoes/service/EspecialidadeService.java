@@ -1,8 +1,10 @@
-package com.gabriel.apiplantoes.especialidade;
+package com.gabriel.apiplantoes.service;
 
-import com.gabriel.apiplantoes.dtos.CadastroEspecialidade;
-import com.gabriel.apiplantoes.dtos.ListagemEspecialidade;
+import com.gabriel.apiplantoes.domain.dtos.CadastroEspecialidade;
+import com.gabriel.apiplantoes.domain.dtos.ListagemEspecialidade;
+import com.gabriel.apiplantoes.domain.especialidade.Especialidade;
 import com.gabriel.apiplantoes.exception.EspecialidadeException;
+import com.gabriel.apiplantoes.repository.EspecialidadeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

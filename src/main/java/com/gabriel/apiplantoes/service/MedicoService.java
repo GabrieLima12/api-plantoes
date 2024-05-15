@@ -1,16 +1,20 @@
-package com.gabriel.apiplantoes.medico;
+package com.gabriel.apiplantoes.service;
 
-import com.gabriel.apiplantoes.dtos.*;
-import com.gabriel.apiplantoes.especialidade.Especialidade;
-import com.gabriel.apiplantoes.especialidade.EspecialidadeRepository;
+import com.gabriel.apiplantoes.domain.dtos.CadastroMedico;
+import com.gabriel.apiplantoes.domain.dtos.ListagemMedico;
+import com.gabriel.apiplantoes.domain.medico.Medico;
+import com.gabriel.apiplantoes.domain.medico.Status;
+import com.gabriel.apiplantoes.domain.relacaomedico.RelacaoMedico;
+import com.gabriel.apiplantoes.repository.RelacaoMedicoRepository;
+import com.gabriel.apiplantoes.domain.unidade.Unidade;
+import com.gabriel.apiplantoes.repository.UnidadeRepository;
+import com.gabriel.apiplantoes.repository.EspecialidadeRepository;
+import com.gabriel.apiplantoes.domain.especialidade.Especialidade;
 import com.gabriel.apiplantoes.exception.EspecialidadeException;
 import com.gabriel.apiplantoes.exception.MedicoException;
 import com.gabriel.apiplantoes.exception.RelacaoMedicoException;
 import com.gabriel.apiplantoes.exception.UnidadeException;
-import com.gabriel.apiplantoes.relacaomedico.RelacaoMedico;
-import com.gabriel.apiplantoes.relacaomedico.RelacaoMedicoRepository;
-import com.gabriel.apiplantoes.unidade.Unidade;
-import com.gabriel.apiplantoes.unidade.UnidadeRepository;
+import com.gabriel.apiplantoes.repository.MedicoRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -41,7 +45,7 @@ public class MedicoService {
         medico.setStatus(Status.ATIVO);
 
         Especialidade especialidadePrimaria = especialidadeRepository.findById(dados.idEspecialidadePrincipal()).orElseThrow(EspecialidadeException::new);
-        especialidadePrimaria.setId(dados.idEspecialidadePrincipal());
+        medico.setEspecialidadePrimaria(especialidadePrimaria);
 
         if (dados.idEspecialidadeSecundaria() != null) {
             Especialidade especialidadeSecundaria = especialidadeRepository.findById(dados.idEspecialidadeSecundaria()).orElseThrow(EspecialidadeException::new);

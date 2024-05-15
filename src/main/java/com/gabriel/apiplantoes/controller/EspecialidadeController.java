@@ -1,10 +1,9 @@
 package com.gabriel.apiplantoes.controller;
 
-import com.gabriel.apiplantoes.dtos.CadastroEspecialidade;
-import com.gabriel.apiplantoes.dtos.CadastroMedico;
-import com.gabriel.apiplantoes.dtos.ListagemEspecialidade;
-import com.gabriel.apiplantoes.especialidade.Especialidade;
-import com.gabriel.apiplantoes.especialidade.EspecialidadeService;
+import com.gabriel.apiplantoes.domain.dtos.CadastroEspecialidade;
+import com.gabriel.apiplantoes.domain.dtos.ListagemEspecialidade;
+import com.gabriel.apiplantoes.domain.especialidade.Especialidade;
+import com.gabriel.apiplantoes.service.EspecialidadeService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,6 +1,6 @@
 package com.gabriel.apiplantoes.exception;
 
-import com.gabriel.apiplantoes.dtos.RestErrorDTO;
+import com.gabriel.apiplantoes.domain.dtos.RestErrorDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

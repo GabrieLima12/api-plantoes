@@ -1,4 +1,4 @@
-package com.gabriel.apiplantoes.medico;
+package com.gabriel.apiplantoes.domain.medico;
 
 public enum Status {
 

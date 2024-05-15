@@ -1,5 +1,6 @@
-package com.gabriel.apiplantoes.unidade;
+package com.gabriel.apiplantoes.repository;
 
+import com.gabriel.apiplantoes.domain.unidade.Unidade;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

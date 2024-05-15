@@ -1,4 +1,4 @@
-package com.gabriel.apiplantoes.dtos;
+package com.gabriel.apiplantoes.domain.dtos;
 
 import jakarta.validation.constraints.NotNull;
 

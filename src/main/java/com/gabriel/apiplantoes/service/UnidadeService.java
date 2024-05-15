@@ -1,8 +1,10 @@
-package com.gabriel.apiplantoes.unidade;
+package com.gabriel.apiplantoes.service;
 
-import com.gabriel.apiplantoes.dtos.CadastroUnidade;
-import com.gabriel.apiplantoes.dtos.ListagemUnidade;
+import com.gabriel.apiplantoes.domain.dtos.CadastroUnidade;
+import com.gabriel.apiplantoes.domain.dtos.ListagemUnidade;
+import com.gabriel.apiplantoes.domain.unidade.Unidade;
 import com.gabriel.apiplantoes.exception.UnidadeException;
+import com.gabriel.apiplantoes.repository.UnidadeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

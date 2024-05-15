@@ -1,4 +1,4 @@
-package com.gabriel.apiplantoes.unidade;
+package com.gabriel.apiplantoes.domain.unidade;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

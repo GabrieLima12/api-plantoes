@@ -1,5 +1,6 @@
-package com.gabriel.apiplantoes.relacaomedico;
+package com.gabriel.apiplantoes.repository;
 
+import com.gabriel.apiplantoes.domain.relacaomedico.RelacaoMedico;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

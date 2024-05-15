@@ -1,7 +1,7 @@
-package com.gabriel.apiplantoes.relacaomedico;
+package com.gabriel.apiplantoes.domain.relacaomedico;
 
-import com.gabriel.apiplantoes.medico.Medico;
-import com.gabriel.apiplantoes.unidade.Unidade;
+import com.gabriel.apiplantoes.domain.unidade.Unidade;
+import com.gabriel.apiplantoes.domain.medico.Medico;
 import jakarta.persistence.*;
 import lombok.*;
 
