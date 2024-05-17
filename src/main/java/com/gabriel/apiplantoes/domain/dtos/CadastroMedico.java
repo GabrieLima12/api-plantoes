@@ -14,5 +14,9 @@ public record CadastroMedico(
         Long idEspecialidadePrincipal,
         Long idEspecialidadeSecundaria,
         @NotEmpty
-        List<Long> idsUnidades) {
+        List<Long> idsUnidades,
+        @NotBlank
+        String cep,
+        String complemento,
+        Integer numero) {
 }

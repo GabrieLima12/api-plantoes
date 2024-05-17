@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface RelacaoMedicoRepository extends JpaRepository<RelacaoMedico, Long> {
 
-    @Query("SELECT DISTINCT rm.unidade.id FROM RelacaoMedico rm WHERE rm.medico.id = :medicoId")
+    @Query("SELECT rm.unidade.id FROM RelacaoMedico rm WHERE rm.medico.id = :medicoId")
     List<Long> findAllUnitsByMedicoId(Long medicoId);
 
 }

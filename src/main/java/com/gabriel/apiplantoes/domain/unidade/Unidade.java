@@ -1,5 +1,6 @@
 package com.gabriel.apiplantoes.domain.unidade;
 
+import com.gabriel.apiplantoes.domain.endereco.Endereco;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,5 +20,9 @@ public class Unidade {
     private Long id;
 
     private String nomeUnidade;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "endereco_id", referencedColumnName = "id")
+    private Endereco endereco;
 
 }

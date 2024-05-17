@@ -1,5 +1,6 @@
 package com.gabriel.apiplantoes.domain.medico;
 
+import com.gabriel.apiplantoes.domain.endereco.Endereco;
 import com.gabriel.apiplantoes.domain.especialidade.Especialidade;
 import jakarta.persistence.*;
 import lombok.*;
@@ -38,4 +39,8 @@ public class Medico {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "especialidade_secundaria_id")
     private Especialidade especialidadeSecundaria;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "endereco_id", referencedColumnName = "id")
+    private Endereco endereco;
 }

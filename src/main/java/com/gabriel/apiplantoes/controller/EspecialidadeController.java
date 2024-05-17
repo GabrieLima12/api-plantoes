@@ -1,7 +1,6 @@
 package com.gabriel.apiplantoes.controller;
 
 import com.gabriel.apiplantoes.domain.dtos.CadastroEspecialidade;
-import com.gabriel.apiplantoes.domain.dtos.ListagemEspecialidade;
 import com.gabriel.apiplantoes.domain.especialidade.Especialidade;
 import com.gabriel.apiplantoes.service.EspecialidadeService;
 import jakarta.validation.Valid;
@@ -36,8 +35,8 @@ public class EspecialidadeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ListagemEspecialidade> listarMedicoPorId(@PathVariable Long id) {
-        ListagemEspecialidade listagemEspecialidade = especialidadeService.listarEspecialidadePorId(id);
-        return ResponseEntity.ok(listagemEspecialidade);
+    public ResponseEntity<Especialidade> listarMedicoPorId(@PathVariable Long id) {
+        Especialidade especialidade = especialidadeService.listarEspecialidadePorId(id);
+        return ResponseEntity.ok(especialidade);
     }
 }

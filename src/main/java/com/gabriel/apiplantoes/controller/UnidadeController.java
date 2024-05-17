@@ -2,7 +2,6 @@ package com.gabriel.apiplantoes.controller;
 
 
 import com.gabriel.apiplantoes.domain.dtos.CadastroUnidade;
-import com.gabriel.apiplantoes.domain.dtos.ListagemUnidade;
 import com.gabriel.apiplantoes.domain.unidade.Unidade;
 import com.gabriel.apiplantoes.service.UnidadeService;
 import jakarta.validation.Valid;
@@ -37,8 +36,8 @@ public class UnidadeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ListagemUnidade> listarUnidadePorId(@PathVariable Long id) {
-        ListagemUnidade listagemUnidade = unidadeService.listarUnidadePorId(id);
-        return ResponseEntity.ok(listagemUnidade);
+    public ResponseEntity<Unidade> listarUnidadePorId(@PathVariable Long id) {
+        Unidade unidade = unidadeService.listarUnidadePorId(id);
+        return ResponseEntity.ok(unidade);
     }
 }

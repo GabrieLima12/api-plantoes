@@ -1,7 +1,7 @@
 package com.gabriel.apiplantoes.service;
 
 import com.gabriel.apiplantoes.domain.dtos.CadastroUnidade;
-import com.gabriel.apiplantoes.domain.dtos.ListagemUnidade;
+import com.gabriel.apiplantoes.domain.endereco.Endereco;
 import com.gabriel.apiplantoes.domain.unidade.Unidade;
 import com.gabriel.apiplantoes.exception.UnidadeException;
 import com.gabriel.apiplantoes.repository.UnidadeRepository;
@@ -13,18 +13,22 @@ import java.util.List;
 public class UnidadeService {
 
     private final UnidadeRepository unidadeRepository;
+    private final EnderecoService enderecoService;
 
-    public UnidadeService(UnidadeRepository unidadeRepository) {
+    public UnidadeService(UnidadeRepository unidadeRepository, EnderecoService enderecoService) {
         this.unidadeRepository = unidadeRepository;
+        this.enderecoService = enderecoService;
     }
 
     public void cadastrarUnidade(CadastroUnidade dados) {
         Unidade unidade = new Unidade();
         unidade.setNomeUnidade(dados.nomeUnidade());
+        Endereco endereco = enderecoService.consultaDeEnderecoPorCep(dados.cep(), dados.numero(), dados.complemento());
+        unidade.setEndereco(endereco);
 
         try {
             unidadeRepository.save(unidade);
-        } catch (UnidadeException exception) {
+        } catch (Exception exception) {
             throw new UnidadeException("Erro ao cadastrar unidade!");
         }
     }
@@ -32,13 +36,12 @@ public class UnidadeService {
     public List<Unidade> listarUnidades() {
         try {
             return unidadeRepository.findAll();
-        } catch (UnidadeException exception) {
+        } catch (Exception exception) {
             throw new UnidadeException("Erro ao listar unidades!");
         }
     }
 
-    public ListagemUnidade listarUnidadePorId(Long id) {
-        Unidade unidade = unidadeRepository.findById(id).orElseThrow(UnidadeException::new);
-        return new ListagemUnidade(unidade.getId(), unidade.getNomeUnidade());
+    public Unidade listarUnidadePorId(Long id) {
+        return unidadeRepository.findById(id).orElseThrow(UnidadeException::new);
     }
 }

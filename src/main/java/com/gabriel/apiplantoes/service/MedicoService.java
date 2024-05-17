@@ -2,19 +2,18 @@ package com.gabriel.apiplantoes.service;
 
 import com.gabriel.apiplantoes.domain.dtos.CadastroMedico;
 import com.gabriel.apiplantoes.domain.dtos.ListagemMedico;
+import com.gabriel.apiplantoes.domain.endereco.Endereco;
 import com.gabriel.apiplantoes.domain.medico.Medico;
 import com.gabriel.apiplantoes.domain.medico.Status;
 import com.gabriel.apiplantoes.domain.relacaomedico.RelacaoMedico;
-import com.gabriel.apiplantoes.repository.RelacaoMedicoRepository;
+import com.gabriel.apiplantoes.repository.*;
+import com.gabriel.apiplantoes.service.EnderecoService;
 import com.gabriel.apiplantoes.domain.unidade.Unidade;
-import com.gabriel.apiplantoes.repository.UnidadeRepository;
-import com.gabriel.apiplantoes.repository.EspecialidadeRepository;
 import com.gabriel.apiplantoes.domain.especialidade.Especialidade;
 import com.gabriel.apiplantoes.exception.EspecialidadeException;
 import com.gabriel.apiplantoes.exception.MedicoException;
 import com.gabriel.apiplantoes.exception.RelacaoMedicoException;
 import com.gabriel.apiplantoes.exception.UnidadeException;
-import com.gabriel.apiplantoes.repository.MedicoRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -28,12 +27,16 @@ public class MedicoService {
     private final UnidadeRepository unidadeRepository;
     private final EspecialidadeRepository especialidadeRepository;
     private final RelacaoMedicoRepository relacaoMedicoRepository;
+    private final EnderecoService enderecoService;
 
-    public MedicoService(MedicoRepository medicoRepository, UnidadeRepository unidadeRepository, RelacaoMedicoRepository relacaoMedicoRepository, EspecialidadeRepository especialidadeRepository) {
+    public MedicoService(MedicoRepository medicoRepository, UnidadeRepository unidadeRepository,
+                         RelacaoMedicoRepository relacaoMedicoRepository, EspecialidadeRepository especialidadeRepository,
+                         EnderecoService enderecoService) {
         this.medicoRepository = medicoRepository;
         this.unidadeRepository = unidadeRepository;
         this.especialidadeRepository = especialidadeRepository;
         this.relacaoMedicoRepository = relacaoMedicoRepository;
+        this.enderecoService = enderecoService;
     }
 
     public void cadastrarMedico(CadastroMedico dados) {
@@ -43,6 +46,9 @@ public class MedicoService {
         medico.setCrm(dados.crm());
         medico.setDataCadastro(LocalDate.now());
         medico.setStatus(Status.ATIVO);
+
+        Endereco endereco = enderecoService.consultaDeEnderecoPorCep(dados.cep(), dados.numero(), dados.complemento());
+        medico.setEndereco(endereco);
 
         Especialidade especialidadePrimaria = especialidadeRepository.findById(dados.idEspecialidadePrincipal()).orElseThrow(EspecialidadeException::new);
         medico.setEspecialidadePrimaria(especialidadePrimaria);
@@ -58,7 +64,7 @@ public class MedicoService {
 
         try {
             medico = medicoRepository.save(medico);
-        } catch (MedicoException exception) {
+        } catch (Exception exception) {
             throw new MedicoException("Erro ao cadastrar médico!");
         }
 
@@ -69,7 +75,7 @@ public class MedicoService {
 
             try {
                 relacaoMedicoRepository.save(relacaoMedico);
-            } catch (RelacaoMedicoException ex) {
+            } catch (Exception ex) {
                 throw new RelacaoMedicoException("Erro ao relacionar medico e unidade!");
             }
 
@@ -94,7 +100,8 @@ public class MedicoService {
                     idEspecialidadePrimaria,
                     idEspecialidadeSecundaria,
                     medico.getStatus(),
-                    idsUnidades
+                    idsUnidades,
+                    medico.getEndereco()
             );
 
         } catch (Exception exception) {
@@ -121,7 +128,8 @@ public class MedicoService {
                         idEspecialidadePrimaria,
                         idEspecialidadeSecundaria,
                         medico.getStatus(),
-                        idsUnidades));
+                        idsUnidades,
+                        medico.getEndereco()));
             } catch (Exception exception) {
                 throw new RelacaoMedicoException("Erro ao buscar unidades relacionada ao médico: " + medico.getNomeMedico());
             }

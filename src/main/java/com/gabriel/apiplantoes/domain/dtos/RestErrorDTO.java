@@ -9,8 +9,6 @@ import org.springframework.http.HttpStatus;
 @Setter
 @AllArgsConstructor
 public class RestErrorDTO {
-
     private HttpStatus httpStatus;
     private String message;
-
 }
