@@ -7,13 +7,13 @@ import com.gabriel.apiplantoes.domain.medico.Medico;
 import com.gabriel.apiplantoes.domain.medico.Status;
 import com.gabriel.apiplantoes.domain.relacaomedico.RelacaoMedico;
 import com.gabriel.apiplantoes.repository.*;
-import com.gabriel.apiplantoes.service.EnderecoService;
 import com.gabriel.apiplantoes.domain.unidade.Unidade;
 import com.gabriel.apiplantoes.domain.especialidade.Especialidade;
 import com.gabriel.apiplantoes.exception.EspecialidadeException;
 import com.gabriel.apiplantoes.exception.MedicoException;
 import com.gabriel.apiplantoes.exception.RelacaoMedicoException;
 import com.gabriel.apiplantoes.exception.UnidadeException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 public class MedicoService {
 
     private final MedicoRepository medicoRepository;
@@ -65,6 +66,7 @@ public class MedicoService {
         try {
             medico = medicoRepository.save(medico);
         } catch (Exception exception) {
+            log.error("Erro ao cadastra médico: ", exception);
             throw new MedicoException("Erro ao cadastrar médico!");
         }
 
@@ -76,6 +78,7 @@ public class MedicoService {
             try {
                 relacaoMedicoRepository.save(relacaoMedico);
             } catch (Exception ex) {
+                log.error("Erro ao relacionar medico e unidade: ", ex);
                 throw new RelacaoMedicoException("Erro ao relacionar medico e unidade!");
             }
 
@@ -105,6 +108,7 @@ public class MedicoService {
             );
 
         } catch (Exception exception) {
+            log.error("Erro ao buscar médicos ou unidades relacionadas: ", exception);
             throw new RelacaoMedicoException("Erro ao buscar unidades relacionada ao médico: " + medico.getNomeMedico());
         }
     }
@@ -122,7 +126,8 @@ public class MedicoService {
                 Long idEspecialidadePrimaria = especialidadePrimaria != null ? especialidadePrimaria.getId() : null;
                 Long idEspecialidadeSecundaria = especialidadeSecundaria != null ? especialidadeSecundaria.getId() : null;
 
-                listagemMedicos.add(new ListagemMedico(medico.getId(),
+                listagemMedicos.add(new ListagemMedico(
+                        medico.getId(),
                         medico.getNomeMedico(),
                         medico.getCrm(),
                         idEspecialidadePrimaria,
@@ -131,6 +136,7 @@ public class MedicoService {
                         idsUnidades,
                         medico.getEndereco()));
             } catch (Exception exception) {
+                log.error("Erro ao buscar médico ou unidades relacionadas: ", exception);
                 throw new RelacaoMedicoException("Erro ao buscar unidades relacionada ao médico: " + medico.getNomeMedico());
             }
         }

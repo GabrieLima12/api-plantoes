@@ -66,4 +66,18 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(status).body(errorDTO);
     }
 
+    @ExceptionHandler(EnderecoException.class)
+    private ResponseEntity<RestErrorDTO> especialidadeExceptions(EnderecoException exception) {
+        HttpStatus status;
+
+        if (exception.getMessage().equals("Endereço não encontrado!"))  {
+            status = HttpStatus.NOT_FOUND;
+        } else {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        RestErrorDTO errorDTO = new RestErrorDTO(status, exception.getMessage());
+        return ResponseEntity.status(status).body(errorDTO);
+    }
+
 }

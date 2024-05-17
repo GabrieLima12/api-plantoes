@@ -5,11 +5,13 @@ import com.gabriel.apiplantoes.domain.endereco.Endereco;
 import com.gabriel.apiplantoes.domain.unidade.Unidade;
 import com.gabriel.apiplantoes.exception.UnidadeException;
 import com.gabriel.apiplantoes.repository.UnidadeRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Slf4j
 public class UnidadeService {
 
     private final UnidadeRepository unidadeRepository;
@@ -29,6 +31,7 @@ public class UnidadeService {
         try {
             unidadeRepository.save(unidade);
         } catch (Exception exception) {
+            log.error("Erro ao cadastrar unidade: ", exception);
             throw new UnidadeException("Erro ao cadastrar unidade!");
         }
     }
@@ -37,6 +40,7 @@ public class UnidadeService {
         try {
             return unidadeRepository.findAll();
         } catch (Exception exception) {
+            log.error("Erro ao buscar unidades: ", exception);
             throw new UnidadeException("Erro ao listar unidades!");
         }
     }
